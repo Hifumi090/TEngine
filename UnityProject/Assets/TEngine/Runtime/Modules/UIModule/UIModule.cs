@@ -331,7 +331,7 @@ namespace TEngine
                 float time = 0f;
                 while (!window.IsLoadDone)
                 {
-                    time += Time.time;
+                    time += Time.deltaTime;
                     if (time > 60f)
                     {
                         break;
@@ -382,12 +382,18 @@ namespace TEngine
                 CloseUI(type);
                 return;
             }
-            
+
             window.Visible = false;
+            window.IsHide = true;
             window.HideTimerId = GameModule.Timer.AddTimer((arg) =>
             {
                 CloseUI(type);
             },window.HideTimeToClose);
+
+            if (window.FullScreen)
+            {
+                OnSetWindowVisible();
+            }
         }
 
         /// <summary>
@@ -469,6 +475,10 @@ namespace TEngine
                 UIWindow window = _stack[i];
                 if (isHideNext == false)
                 {
+                    if (window.IsHide)
+                    {
+                        continue;
+                    }
                     window.Visible = true;
                     if (window.IsPrepare && window.FullScreen)
                     {
@@ -531,7 +541,7 @@ namespace TEngine
             float time = 0f;
             while (!ret.IsLoadDone)
             {
-                time += Time.time;
+                time += Time.deltaTime;
                 if (time > 60f)
                 {
                     break;
@@ -569,7 +579,7 @@ namespace TEngine
                 float time = 0f;
                 while (!ret.IsLoadDone)
                 {
-                    time += Time.time;
+                    time += Time.deltaTime;
                     if (time > 60f)
                     {
                         break;
